@@ -1,0 +1,76 @@
+Sub CSV_UTF8()
+
+	Dim fileDate As String
+	Dim maxRow As Long
+	Dim maxCol As Long
+	Dim iCount As Long
+	Dim jCount As Long
+	Dim stream
+	Dim streamTmp
+	Dim buf As String
+
+	'현재 날짜 및 시간 취득
+	fileDate = Format(Now, "_YYYYMMDDHHNNSS")
+
+	'마지막 행 취득
+	maxRow = ActiveSheet.Range("A1").End(xlDown).Row
+	'마지막 열(컬럼) 취득
+	maxCol = ActiveSheet.Range("A1").End(xlToRight).Column
+
+	'파일을 저장할 경로 지정
+	Dim FolderName As String
+
+	'매크로 파일이 있는 폴더 안에 csv폴더를 만들도록 지정 
+	FolderName = ActiveWorkbook.Path & "\csv"
+
+	'지정한 경로에 폴더가 없는 경우에만 생성
+	If Dir(FolderName, vbDirectory) = "" Then 
+		MkDir FolderName
+	End If
+
+	'저장할 파일명 설정
+	Dim strFilePath As String
+	strFilePath = FolderName & "\csv" & fileDate & ".csv"
+
+	Set streamTmp = CreateObject("ADODB.Stream")
+
+	With streamTmp
+		.Type = 2
+		.Charset = "UTF-8"
+		.Open
+
+		For iCount = 1 To maxRow
+		buf = ""
+			For jCount = 2 To maxCol - 1
+				buf = buf & Cells(iCount, jCount) & ","
+
+				kCount = jCount
+			Next jCount
+			
+			buf = buf & Cells(iCount, kCount + 1) & vbCrLf
+			.WriteText buf, adWriteLine
+		Next iCount
+    
+    .savetofile strFilePath, 2
+	End With
+
+	'With streamTmp
+	'	.Position = 0
+	'	.Type = 1
+	'	.Position = 3
+	'End With
+
+'Set stream = CreateObject("ADODB.Stream")
+'With stream
+'	.Type = 1
+'	.Open
+'	.write streamTmp.read()
+'	.savetofile strFilePath, 2
+'	.Close
+
+'	'stream.savetofile strFilePath, 2
+'End With
+
+streamTmp.Close
+MsgBox ("CSV파일을 생성했습니다." & vbLf & vbLf & varFile)
+End Sub
