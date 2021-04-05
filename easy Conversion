@@ -41,7 +41,7 @@ Sub CSV_UTF8()
 
 		For iCount = 1 To maxRow
 		buf = ""
-			For jCount = 2 To maxCol - 1
+			For jCount = 1 To maxCol 
 				buf = buf & Cells(iCount, jCount) & ","
 
 				kCount = jCount
