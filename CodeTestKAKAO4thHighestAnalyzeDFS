@@ -1,0 +1,17 @@
+class Solution {
+        public int solution(int n) {
+            int answer = 0;
+            return check(n-2,2);
+        }
+
+        private int check(int n, int p) { // n이 현재 값 , p가 plus의 개수
+     //n이 3이면 그냥 줘
+            if(n==3 && p==2)return 1;
+     //n이 3보다 작거나 *의 개수가 ++의 개수보다 모질라면 안됨.
+            else if( n<3 ||  Math.log(n)/Math.log(3) *2 < p)return 0;
+     //값이 0이 되면 안됨.
+            else if(n==3 && p==3) return 0;
+    //DFS 패턴 공부해라.
+            return check(n-1,p+1)+(n%3==0&&p>1?check(n/3,p-2):0);
+        }
+    }
