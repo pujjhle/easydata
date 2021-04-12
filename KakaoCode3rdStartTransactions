@@ -1,0 +1,48 @@
+
+    public int solution(String[] lines) {
+        ArrayList<double[]> dlist = new ArrayList<double[]>();
+
+        for (int i = 0; i < lines.length; i++) {
+            double a = Double.parseDouble(lines[i].substring(17, 23));
+            a += Integer.parseInt(lines[i].substring(14, 16)) * 60;
+            a += Integer.parseInt(lines[i].substring(11, 13)) * 3600;
+            double b = Double.parseDouble(lines[i].substring(24, lines[i].length() - 1));
+            dlist.add(new double[] { a, b });
+
+        }
+
+        int countAns = 0;
+        int countComp = 0;
+        double aEnd = 0;
+        double aStart = 0;
+
+        double bEnd = 0;
+        double bStart = 0;
+        for (int i = 0; i < dlist.size(); i++) {
+            countComp = 0;
+            aEnd = dlist.get(i)[0];
+            aStart = aEnd - dlist.get(i)[1] + 0.001;
+
+            for (int j = 0; j < dlist.size(); j++) {
+                bEnd = dlist.get(j)[0];
+                bStart = bEnd - dlist.get(j)[1] + 0.001;
+
+                if (aEnd >= bEnd && (aEnd - 1) <= bEnd) {
+                    countComp++;
+                } else if (aEnd <= (bStart) && aEnd >= (bStart - 1)) {
+                    countComp++;
+                } else if (aStart >= bEnd && (aStart - 1) <= bEnd) {
+                    countComp++;
+                } else if ((aStart) <= (bStart) && aEnd >= (bStart)) {
+                    countComp++;
+                }
+
+            }
+            if (countAns < countComp) {
+                countAns = countComp;
+            }
+
+        }
+
+        return countAns;
+    }
