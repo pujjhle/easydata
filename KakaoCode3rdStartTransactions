@@ -1,4 +1,80 @@
- public int solution(String[] lines) {
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+import java.util.ArrayList;
+
+class Solution {
+    public int solution(String[] lines) {
             ArrayList<double[]> dlist = new ArrayList<double[]>();
 
         for (int i = 0; i < lines.length; i++) {
@@ -19,7 +95,7 @@
         double bEnd = 0;
         double bStart = 0;
         //N번째 점검 노드의 시작점과 종료점 기준으로 -1초 이내에 포함된 수 계산.
-        //종료점이 어떤 노드의 범위안에 있다. 혹은 종료점-1초 지점이 어떠한 노드 안에 있다.
+        //종료점이 어떤 노드의 범위안에 있다. 혹은 종료점-1초 지점이 어떠한 노드 안에 있다. 또는 어떠한 노드를 종료점과 종료점 -1초가 포함해버린다.
         for (int i = 0; i < dlist.size(); i++) {
             countCompStart = 0;
             countCompEnd = 0;
@@ -29,12 +105,17 @@
             for (int j = 0; j < dlist.size(); j++) {
                 bEnd = dlist.get(j)[0];
                 bStart = bEnd - dlist.get(j)[1] + 0.001;
+                if(i == j){
+                    countCompStart++;
+                    countCompEnd++;
+                    continue;
+                }
 
-                if( (aEnd <=bEnd && aEnd>=bStart) ||(aEnd-1<=bEnd && aEnd-1>=bStart)){
+                if( (aEnd <bEnd && aEnd>bStart) ||(aEnd-1<bEnd && aEnd-1>bStart)||(aEnd>=bEnd&& aEnd-1<=bStart)){
                     countCompStart++;
 
                 }
-                if( (aStart <=bEnd && aStart>=bStart) ||(aStart-1<=bEnd && aStart-1>=bStart)){
+                if( (aStart <bEnd && aStart>bStart) ||(aStart-1<bEnd && aStart-1>bStart)||(aStart>=bEnd&& aStart-1<=bStart)){
                     countCompEnd++;
 
                 }
@@ -61,3 +142,5 @@
 
         return countAns;
 }
+}
+
