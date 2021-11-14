@@ -1,0 +1,107 @@
+/*
+Enter your query here.
+
+Julia conducted a  days of learning SQL contest. The start date of the contest was March 01, 2016 and the end date was March 15, 2016.
+-- 20160315>SUBMISSIONDATE>20160301
+
+Write a query  and find the hacker_id and name of the hacker who made maximum number of submissions each day. If more than one such hacker has a maximum number of submissions, print the lowest hacker_id. The query should print this information for each day of the contest, sorted by the date.
+1. to print total number of  (starting on the first day of the contest),
+-- CNT(unique hackers who made at least  submission each day)
+--- unique hackers who made at least  submission each day
+--- X_SUBMISSIONDATE - 20160301 = SELECT CNT (SELECT DISTINCT SUBMISSIONDATE, SUBMISSION ID , HACKER ID WHERE SUBMISSIONDATE< X_SUBMISSIONDATE)
+2. find the hacker_id and name of the hacker who made maximum number of submissions each day.
+-- ID, NAME WHERE RANK(CNT(SUBMISSION)) = 1
+2-1. If more than one such hacker has a maximum number of submissions, print the lowest hacker_id. 
+-- SELECT IN, NAME
+    FROM (ID, NAME WHERE RANK(CNT(SUBMISSION)) = 1)
+    WHERE ROWNUM =1 
+    ORDER BY 1
+
+
+4. The query should print this information for each day of the contest, sorted by the date.
+SELECT DATE, 1,2-1
+ORDER BY DATE
+
+SELECT  SD.SUBMISSION_DATE,
+        (   SELECT COUNT(DISTINCT HACKER_ID)
+            FROM    SUBMISSION_DATE MID
+            WHERE (  SELECT  DISTINCT    
+                            RT.SUBMISSION_DATE, 
+                            RT.HACKER_ID 
+                    FROM    SUBMISSIONS AS RT
+                    WHERE   RT.SUBMISSION_DATE<SD.SUBMISSION_DATE
+                    ) AS CM.
+            GROUP BY SUBMISSION_DATE
+         )
+FROM 
+(
+SELECT  DISTINCT 
+        SUBMISSION_DATE
+FROM    SUBMISSIONS
+) AS SD
+LEFT JOIN
+(
+SELECT  COUNT(DISTINCT HACKER_ID)
+FROM    SUBMISSION_DATE
+GROUP BY SUBMISSION_DATE
+)
+
+
+
+SELECT  DISTINCT 
+        SUBMISSION_DATE
+FROM    SUBMISSIONS
+) AS SD
+
+SELECT 
+
+
+*/
+/*
+SELECT  SD.SUBMISSION_DATE,
+        (SELECT COUNT(DISTINCT HACKER_ID)
+        FROM SUBMISSIONS MID
+        WHERE MID.SUBMISSION_DATE = SD.SUBMISSION_DATE
+         AND DATEDIFF(SD.SUBMISSION_DATE,'20160301') = ( SELECT  count(DISTINCT                                                                         RT.SUBMISSION_DATE)
+                    FROM    SUBMISSIONS AS RT
+                    WHERE   RT.SUBMISSION_DATE<SD.SUBMISSION_DATE
+                    AND RT.HACKER_ID = MID.HACKER_ID
+         ) 
+        )
+        
+FROM 
+(
+SELECT  DISTINCT 
+        SUBMISSION_DATE
+FROM    SUBMISSIONS
+) AS SD
+*/
+SELECT     A.SUBMISSION_DATE,
+           A.CNT,
+           A.HACKER_ID,
+           B.NAME
+FROM (
+SELECT SUBMISSION_DATE,
+        COUNT(DISTINCT MO.HACKER_ID) AS CNT,
+        (
+                SELECT  B.HACKER_ID
+                FROM    SUBMISSIONS B
+                WHERE   B.SUBMISSION_DATE = MO.SUBMISSION_DATE
+                GROUP BY B.SUBMISSION_DATE, B.HACKER_ID
+                ORDER BY COUNT(B.SUBMISSION_ID) DESC, B.HACKER_ID ASC
+                LIMIT 1
+        ) AS HACKER_ID
+        
+FROM SUBMISSIONS MO
+
+WHERE DATEDIFF(SUBMISSION_DATE,'20160301') =    (
+                                                SELECT COUNT(DISTINCT SUBMISSION_DATE)
+                                                FROM    SUBMISSIONS CO
+                                                WHERE   MO.HACKER_ID = CO.HACKER_ID
+                                                AND     CO.SUBMISSION_DATE< MO.SUBMISSION_DATE
+                                                )
+GROUP BY SUBMISSION_DATE
+    ) A
+LEFT JOIN  HACKERS AS B
+ON A.HACKER_ID = B.HACKER_ID
+ORDER BY 1
