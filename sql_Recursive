@@ -1,0 +1,7 @@
+with recursive a(id) as 
+(select 2 union all select id+1 from a where id<1000)
+select group_concat(x separator '&') from 
+	(select a.id as x,count(*) as y from 
+	a inner join a b on a.id>=b.id 
+	where mod(a.id,b.id)=0 group by a.id) as newtable 
+where y<2 order by x;
