@@ -1,0 +1,10 @@
+/*Date Formualtion*/
+
+SELECT DAYOFYEAR("2017-06-15");
+-> gives ouput From 1 to 365
+
+SELECT DAYOFWEEK("2017-06-15");
+-> Sun to Sat comes out as 1 to 7
+
+SELECT EXTRACT(MONTH FROM "2017-06-15");
+-> extracts a part from a given date.
